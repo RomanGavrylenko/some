@@ -31,3 +31,15 @@
     transform: rotate(360deg);
   }
 }
+
+label {
+  display: block;
+}
+
+input {
+  display: block;
+}
+
+.some {
+  border: 2px solid green
+}
