@@ -1,12 +1,13 @@
 import React from 'react';
 import { Text } from 'informed';
 
-export const Item = ({label, field, placeholder}) => {
+export const Item = ({label, field, placeholder, initialValue}) => {
     return(
         <label>
             {label}
             <Text field={field}
-                  placeholder={placeholder} />
+                  placeholder={placeholder} 
+                  initialValue={initialValue} />
         </label>
     );
 }

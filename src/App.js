@@ -3,13 +3,15 @@ import './App.css';
 import { Form, Text, useFormApi, BasicText, asField, Radio,  Scope, withFormApi, RadioGroup } from 'informed';
 import MainOrder from './formOrder/mainOrder';
 import DeliveryOrder from './formOrder/DeliveryOrder';
+import Map from './formOrder/map'
 
 
 class App extends React.Component {
 
   state={
     showTarif: false,
-    showAddress: false
+    showAddress: false,
+    addressValue: ''
   }
 
   getApi = (formApi) => {
@@ -21,9 +23,10 @@ class App extends React.Component {
   }
 
   //для отображения или скрытия блока с тарифом
-  tarifChange = (value) => {
+  tarifChange = (bol, value) => {
     this.setState({
-      showTarif: value
+      showTarif: bol,
+      addressValue: value
     })
   }
   //для отображения или скрытия блока с адресом
@@ -44,6 +47,7 @@ class App extends React.Component {
             showTarif={this.state.showTarif}
             changeTarif={this.changeTarif}
             showAddress={this.state.showAddress}
+            addressValue={this.state.addressValue}
           />
         </Scope>
       </Form>

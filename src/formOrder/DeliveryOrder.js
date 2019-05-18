@@ -5,13 +5,13 @@ import { Item } from './mainOrder';
 export default class DeliveryOrder extends React.Component {
     render() {
 
-        const { showTarif, change, showAddress, changeTarif } = this.props;
+        const { showTarif, change, showAddress, changeTarif, addressValue } = this.props;
 
         return (
             <>
                 <DeliveryTypeWith change={change} />
                 { showTarif && <Tarif changeTarif={changeTarif}/>}
-                { (showTarif && showAddress)  && <AddressItem />}
+                { (showTarif && showAddress)  && <AddressItemWith addressValue={addressValue}/>}
             </>
         );
     }
@@ -82,8 +82,8 @@ const DeliveryType = ({ formApi, change }) => {
     const changeValue = (value) => {
         setDeliv(value);
         if (value !== 'dpd' && count) {
-            formApi.setValue('address_id', '');
-            formApi.setValue('tarif', null)
+            //formApi.getState().values.form.hasOwnProperty('address_id') && formApi.setValue('address_id', '');
+            //formApi.getState().values.form.hasOwnProperty('tarif') && formApi.setValue('tarif', null)
         }
         if (value !== 'dpd') {
             setCount(count + 1);
@@ -92,7 +92,7 @@ const DeliveryType = ({ formApi, change }) => {
 
     const textChange = (value) => {
         let bol = value ? true : false
-        change(bol)
+        change(bol, value)
     }
 
     return (
@@ -145,7 +145,15 @@ const Tarif = ({ change, changeTarif }) => {
     );
 }
 
-const AddressItem = () => {
+const AddressItem = ({addressValue, formApi}) => {
+
+    useEffect(()=> {
+        console.log(1)
+        formApi.setValue('addres_item.name',addressValue )
+    }, [addressValue]);  
+    
+    
+
     return (
         <div>
             <Scope scope='addres_item'>
@@ -153,6 +161,7 @@ const AddressItem = () => {
                     label='Имя'
                     field='name'
                     placeholder='Имя'
+                    initialValue='ssw'
                 />
                 <Item
                     label='Email'
@@ -164,8 +173,11 @@ const AddressItem = () => {
                     field='phone'
                     placeholder='tel'
                 />
+                <button ></button>
             </Scope>
         </div>
     );
 
 }
+
+const AddressItemWith = withFormApi(AddressItem)
