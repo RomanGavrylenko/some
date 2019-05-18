@@ -82,8 +82,8 @@ const DeliveryType = ({ formApi, change }) => {
     const changeValue = (value) => {
         setDeliv(value);
         if (value !== 'dpd' && count) {
-            //formApi.getState().values.form.hasOwnProperty('address_id') && formApi.setValue('address_id', '');
-            //formApi.getState().values.form.hasOwnProperty('tarif') && formApi.setValue('tarif', null)
+            formApi.getState().values.form.hasOwnProperty('address_id') && formApi.setValue('address_id', '');
+            formApi.getState().values.form.hasOwnProperty('tarif') && formApi.setValue('tarif', null)
         }
         if (value !== 'dpd') {
             setCount(count + 1);
