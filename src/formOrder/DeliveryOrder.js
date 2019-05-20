@@ -1,21 +1,237 @@
-import React, { useState, useEffect } from 'react';
-import { RadioGroup, Radio, Text, Scope, withFormApi } from 'informed';
+import React, { useState, useEffect, forwardRef } from 'react';
+import { RadioGroup, Radio, Text, Scope, withFormApi, BasicRadioGroup, BasicRadio,
+BasicText, BasicTextArea, BasicSelect, asField, Option, Select , withFieldApi, withRadioGroup } from 'informed';
 import { Item } from './mainOrder';
 
+const data = [
+    {
+        label: 'адресс1',
+        value: 'адресс1'
+    },
+    {
+        label: 'адресс2',
+        value: 'адресс2'
+    },
+    {
+        label: 'адресс3',
+        value: 'адресс3'
+    }
+]
+
+const Input = asField(
+    ({
+      fieldState,
+      formApi,
+      fieldApi, 
+      field,
+      required = false,
+      type = "text",
+      options = [],
+      ...rest
+    }) => (
+      <div className="">
+        <div className="Modal_form_field_label" htmlFor={field}>
+         
+        </div>
+        { console.log(rest) }
+       
+        {(() => {
+           
+          switch (type) {
+            case "text":
+              return (
+                <BasicText
+                  {...rest}
+                  fieldState={fieldState}
+                  field={field}
+                  className="Modal_form_field_input"
+                  fieldApi={fieldApi}
+                  style={fieldState.error ? { border: "solid 1px red" } : null}
+                />
+              );
+  
+            case "textarea":
+              return (
+                <BasicTextArea
+                  {...rest}
+                  fieldState={fieldState}
+                  field={field}
+                  fieldApi={fieldApi}
+                  className="Modal_form_field_input"
+                />
+              );
+  
+            case "select":
+              return (
+                <Select field={field} 
+                        className="Modal_form_field_input" 
+                        fieldApi={fieldApi}>
+                  {options.map(opt => (
+                    <Option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </Option>
+                  ))}
+                </Select>
+              );
+
+              case "radio":
+                return (
+                    <label>
+                        <BasicRadio type='radio' {...rest}
+                                    formApi={formApi}
+                                    fieldState={fieldState}
+                                    fieldApi={fieldApi}
+                                    {...rest}  />
+                        {rest.label}
+                    </label>  
+                );
+            
+            case 'BasicRadioGroup':
+                return(
+                   <BasicRadioGroup field={field}  
+                                    formApi={formApi}
+                                    fieldState={fieldState}
+                                    fieldApi={fieldApi}
+                                    {...rest} >
+                        { rest.children}
+                   </BasicRadioGroup> 
+                );
+  
+            default:
+              break;
+          }
+        })()}
+        
+      </div>
+    )
+  );
+
+  const SomeRadio = forwardRef(( props, ref)=> {
+    return (
+        <label>
+            <BasicRadio ref={ref} {...props}/>
+        </label>
+    );
+  })
+
+  const SomeRadio2 = asField(({ fieldState, ...props }) => (
+      <BasicRadio
+        fieldState={fieldState}
+        {...props}
+      />
+  ));
+
+  const WithRadioGroup = withRadioGroup(SomeRadio2)
+
+  
+class getMyGroup extends React.Component {
+    render(){
+        return(
+            <BasicRadioGroup {...this.props} >
+                {this.props.children}
+            </BasicRadioGroup>
+        );
+    }
+  }
+
+  const GetMyGroupWith = asField(getMyGroup);
+
+ 
 export default class DeliveryOrder extends React.Component {
+
+    renderRadio = (data) => {
+        return data.map((item, i)=>{
+            return <BasicRadio value={item.value} {...item}  key={i} />
+        })
+    }
+
     render() {
 
         const { showTarif, change, showAddress, changeTarif, addressValue } = this.props;
 
         return (
             <>
-                <DeliveryTypeWith change={change} />
+                {/*<DeliveryTypeWith change={change} />
                 { showTarif && <Tarif changeTarif={changeTarif}/>}
                 { (showTarif && showAddress)  && <AddressItemWith addressValue={addressValue}/>}
+                <Input type='text' field="description" />
+                <Input  type="select"
+                        field="currency"
+                        options={[
+                            {
+                                value: "mxn",
+                                label: "MXN"
+                            },
+                            {
+                                value: "usd",
+                                label: "USD"
+                            }
+                        ]}
+                    />*/}
+                { /*<Input  type="radio"
+                        field="ssq"
+                        options={[
+                            {
+                                value: "mxn",
+                                label: "MXN"
+                            },
+                            {
+                                value: "usd",
+                                label: "USD"
+                            }
+                        ]}
+                    />*/}
+                <Input type='BasicRadioGroup' 
+                        field='qqq'
+                        fieldState={this.props.fieldState}
+                        formApi={this.props.formApi} >
+                       {
+                           () => {
+                            return (
+                            <>
+                                <WithRadioGroup type='radio' 
+                                fieldState={this.props.fieldState}
+                                formApi={this.props.formApi}
+                                formState={this.props.formState}
+                                value='some' />
+                                 <WithRadioGroup type='radio' 
+                                fieldState={this.props.fieldState}
+                                formApi={this.props.formApi}
+                                formState={this.props.formState}
+                                value='some2' />
+                            </>
+                            )
+                           }
+                       }
+                </Input>
+                <BasicRadioGroup field='sdsad' value=''>
+                   
+                </BasicRadioGroup>
+
+                <GetMyGroupWith field='mycustom'>
+                    <Radio value='one' />
+                    <Radio value='two' />
+                </GetMyGroupWith>
+                <RadioGroup field='sdsadsss' initialValue='mxn'>
+                    <Radio type='radio' label='one' value="mxn"/> 
+                    <Radio type='radio' label='two' value="mxsddsn"/> 
+                </RadioGroup>
+
+                {/*<RadioGroup field='customS'>
+                    <label>Male <Radio value="male"/></label>
+                    <label>Female <Radio value="female"/></label>
+                    </RadioGroup>*/}
+                {
+                /*<RadioGroup field='radio' data={data}>
+                { 
+                    this.renderRadio(data)
+                }
+            </RadioGroup>*/}
             </>
         );
     }
 }
+// withFieldApi(DeliveryOrder)
 
 const MyRadio = ({ value, label }) => {
     return (
@@ -152,7 +368,9 @@ const AddressItem = ({addressValue, formApi}) => {
         formApi.setValue('addres_item.name',addressValue )
     }, [addressValue]);  
     
-    
+    const setSome = () => {
+        formApi.setValue('addres_item.name', 'my')
+    }
 
     return (
         <div>
@@ -173,7 +391,7 @@ const AddressItem = ({addressValue, formApi}) => {
                     field='phone'
                     placeholder='tel'
                 />
-                <button ></button>
+                <button onClick={setSome}>setSome</button>
             </Scope>
         </div>
     );
@@ -181,3 +399,4 @@ const AddressItem = ({addressValue, formApi}) => {
 }
 
 const AddressItemWith = withFormApi(AddressItem)
+

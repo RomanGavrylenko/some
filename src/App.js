@@ -36,23 +36,39 @@ class App extends React.Component {
     })
   }
 
+  setSome = () => {
+    this.formApi.setValue('form[email]', 'some');
+  }
+
   render(){
     return(
       <>
       <Form getApi={this.getApi} >
-        <Scope scope='form'>
-          <MainOrder/>
-          <DeliveryOrder 
-            change={this.tarifChange}
-            showTarif={this.state.showTarif}
-            changeTarif={this.changeTarif}
-            showAddress={this.state.showAddress}
-            addressValue={this.state.addressValue}
-          />
-        </Scope>
+        {
+          (...props) =>{
+            console.log(props)
+              return(
+                <Scope scope='form'>
+                  <MainOrder />
+                  <DeliveryOrder
+                    change={this.tarifChange}
+                    showTarif={this.state.showTarif}
+                    changeTarif={this.changeTarif}
+                    showAddress={this.state.showAddress}
+                    addressValue={this.state.addressValue}
+                    formApi={props.formApi}
+                    formState={props.formState}
+                  />
+                </Scope>
+              );
+          }
+        }
       </Form>
       <button onClick={this.getState}>
         getState
+      </button>
+      <button onClick={this.setSome}>
+        getSome
       </button>
       </>
     );
